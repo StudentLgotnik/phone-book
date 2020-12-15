@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  postgresqldb:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=phonebook_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    restart: unless-stopped
+  app:
+    container_name: springboot_phonebook
+    image: springboot_phonebook:latest
+    network_mode: bridge
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - postgresqldb
+    links:
+      - postgresqldb
