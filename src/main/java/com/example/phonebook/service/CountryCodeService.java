@@ -3,6 +3,7 @@ package com.example.phonebook.service;
 import com.example.phonebook.database.entity.CountryCode;
 import com.example.phonebook.database.repository.CountryCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,6 +26,7 @@ public class CountryCodeService implements IService<CountryCode> {
     }
 
     @Override
+    @Cacheable("countryCodes")
     public CountryCode get(int id){
         return countryCodeRepository.findById(id).orElse(null);
     }

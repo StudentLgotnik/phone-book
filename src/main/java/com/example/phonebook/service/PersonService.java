@@ -2,7 +2,13 @@ package com.example.phonebook.service;
 
 import com.example.phonebook.database.entity.Person;
 import com.example.phonebook.database.repository.PersonRepository;
+import com.example.phonebook.database.specification.PersonNameSpecification;
+import com.example.phonebook.database.specification.PersonPhoneSpecification;
+import com.example.phonebook.database.specification.PersonSecondNameSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,7 +30,18 @@ public class PersonService implements IService<Person> {
         return personRepository.findAll();
     }
 
+    @Cacheable("findpersons")
+    public List<Person> find(String name, String secondName, String phone) {
+
+        PersonNameSpecification nameSpecification = new PersonNameSpecification(name);
+        PersonSecondNameSpecification secondNameSpecification = new PersonSecondNameSpecification(secondName);
+        PersonPhoneSpecification phoneSpecification = new PersonPhoneSpecification(phone);
+
+        return personRepository.findAll(nameSpecification.and(secondNameSpecification).and(phoneSpecification));
+    }
+
     @Override
+    @Cacheable("persons")
     public Person get(int id){
         return personRepository.findById(id).orElse(null);
 

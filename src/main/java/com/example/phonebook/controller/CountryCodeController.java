@@ -26,7 +26,7 @@ public class CountryCodeController {
     }
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CountryCode> getAll(@PathVariable("id") String countryCodeId) {
+    public ResponseEntity<CountryCode> getOne(@PathVariable("id") String countryCodeId) {
         return ResponseEntity.ok(countryCodeService.get(Integer.parseInt(countryCodeId)));
     }
 

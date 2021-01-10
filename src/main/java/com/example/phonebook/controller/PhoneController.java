@@ -1,8 +1,6 @@
 package com.example.phonebook.controller;
 
 import com.example.phonebook.database.entity.Phone;
-import com.example.phonebook.service.CountryCodeService;
-import com.example.phonebook.service.PersonService;
 import com.example.phonebook.service.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,7 +26,7 @@ public class PhoneController {
     }
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Phone> getAll(@PathVariable("id") String phoneId) {
+    public ResponseEntity<Phone> getOne(@PathVariable("id") String phoneId) {
         return ResponseEntity.ok(phoneService.get(Integer.parseInt(phoneId)));
     }
 

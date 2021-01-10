@@ -3,6 +3,7 @@ package com.example.phonebook.service;
 import com.example.phonebook.database.entity.Phone;
 import com.example.phonebook.database.repository.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,6 +26,7 @@ public class PhoneService implements IService<Phone>{
     }
 
     @Override
+    @Cacheable("phones")
     public Phone get(int id){
         return phoneRepository.findById(id).orElse(null);
     }
