@@ -22,6 +22,10 @@ public class Person implements Serializable {
     @Column(name = "age")
     private int age;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "phone_id", nullable = false)
+    private PhoneBook phoneBook;
+
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Phone> phones;
@@ -48,6 +52,14 @@ public class Person implements Serializable {
 
     public void setSecondName(String secondName) {
         this.secondName = secondName;
+    }
+
+    public PhoneBook getPhoneBook() {
+        return phoneBook;
+    }
+
+    public void setPhoneBook(PhoneBook phoneBook) {
+        this.phoneBook = phoneBook;
     }
 
     public int getAge() {
