@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "phonebook_schema")
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "login")
@@ -53,5 +53,12 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, login, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                '}';
     }
 }

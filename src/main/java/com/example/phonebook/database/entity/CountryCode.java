@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "area_codes")
+@Table(name = "area_codes", schema = "phonebook_schema")
 public class CountryCode implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "code")

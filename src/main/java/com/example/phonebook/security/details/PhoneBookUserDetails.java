@@ -10,10 +10,14 @@ import java.util.Collections;
 
 public class PhoneBookUserDetails implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public PhoneBookUserDetails(User user) {
         this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override

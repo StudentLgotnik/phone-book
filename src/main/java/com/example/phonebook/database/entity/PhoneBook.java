@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "phone_books")
+@Table(name = "phone_books", schema = "phonebook_schema")
 public class PhoneBook implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "title")

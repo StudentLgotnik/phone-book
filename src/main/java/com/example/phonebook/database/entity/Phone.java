@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "phones")
+@Table(name = "phones", schema = "phonebook_schema")
 public class Phone implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne(cascade = CascadeType.REFRESH)
