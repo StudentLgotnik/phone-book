@@ -16,13 +16,9 @@ public class PhoneBook implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @OneToMany(mappedBy = "phoneBook", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Person> persons;
 
     public int getId() {
         return id;
@@ -48,24 +44,16 @@ public class PhoneBook implements Serializable {
         this.title = title;
     }
 
-    public List<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhoneBook phoneBook = (PhoneBook) o;
-        return id == phoneBook.id && Objects.equals(user, phoneBook.user) && Objects.equals(persons, phoneBook.persons);
+        return id == phoneBook.id && Objects.equals(user, phoneBook.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, persons);
+        return Objects.hash(id, user);
     }
 }

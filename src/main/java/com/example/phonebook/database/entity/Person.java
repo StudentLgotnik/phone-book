@@ -70,6 +70,14 @@ public class Person implements Serializable {
         this.age = age;
     }
 
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class PersonService implements IService<Person> {
 
     private final PersonRepository personRepository;
@@ -48,11 +47,13 @@ public class PersonService implements IService<Person> {
     }
 
     @Override
+    @Transactional
     public Person create(Person person) {
         return personRepository.save(person);
     }
 
     @Override
+    @Transactional
     public Person update(Person person) {
         Person forUpdate = personRepository.getOne(person.getId());
         forUpdate.setName(person.getName());
@@ -62,6 +63,7 @@ public class PersonService implements IService<Person> {
     }
 
     @Override
+    @Transactional
     public void delete(int personId) {
         personRepository.deleteById(personId);
     }
