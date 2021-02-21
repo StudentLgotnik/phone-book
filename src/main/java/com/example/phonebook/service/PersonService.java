@@ -26,7 +26,7 @@ public class PersonService implements IService<Person> {
 
     @Override
     public List<Person> getAll() {
-        return personRepository.findAll();
+        return personRepository.getAll();
     }
 
     @Cacheable("findpersons")

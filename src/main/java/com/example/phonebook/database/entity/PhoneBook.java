@@ -16,8 +16,8 @@ public class PhoneBook implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     public int getId() {

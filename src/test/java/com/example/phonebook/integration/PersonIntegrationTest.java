@@ -142,7 +142,7 @@ public class PersonIntegrationTest {
         newPerson.setName(name);
         newPerson.setSecondName(secondName);
         newPerson.setAge(age);
-        newPerson.setPhones(Collections.emptyList());
+//        newPerson.setPhones(Collections.emptyList());
         newPerson.setPhoneBook(phoneBook);
         return newPerson;
     }

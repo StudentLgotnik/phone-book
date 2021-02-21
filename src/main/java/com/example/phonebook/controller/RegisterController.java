@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/users")
 public class RegisterController {
@@ -29,6 +31,12 @@ public class RegisterController {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @PreAuthorize("permitAll()")

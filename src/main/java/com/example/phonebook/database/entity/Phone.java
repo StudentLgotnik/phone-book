@@ -1,5 +1,7 @@
 package com.example.phonebook.database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,15 +14,16 @@ public class Phone implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(cascade = CascadeType.REFRESH)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "country_code_id", referencedColumnName = "id")
     private CountryCode countryCode;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonIgnoreProperties({"phoneBook", "phones"})
     private Person person;
 
     public void setId(int id) {

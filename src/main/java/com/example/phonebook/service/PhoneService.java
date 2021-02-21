@@ -22,7 +22,7 @@ public class PhoneService implements IService<Phone>{
 
     @Override
     public List<Phone> getAll() {
-        return phoneRepository.findAll();
+        return phoneRepository.getAll();
     }
 
     @Override

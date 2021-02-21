@@ -157,7 +157,7 @@ public class PersonControllerTest {
         Person newPerson = newPerson(id, name, secondName, age);
         Phone phone = new Phone();
         phone.setPhoneNumber(phoneNumber);
-        newPerson.setPhones(Collections.singletonList(phone));
+//        newPerson.setPhones(Collections.singletonList(phone));
         return newPerson;
     }
 
