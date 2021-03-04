@@ -1,23 +1,22 @@
 package com.example.phonebook.statistics.database.entity;
 
-import org.springframework.data.annotation.Id;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Mail implements Serializable {
 
-    @Id
-    private int id;
 
     private String content;
 
-    public int getId() {
-        return id;
+    LocalDateTime createdOn;
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
     public String getContent() {
@@ -28,16 +27,24 @@ public class Mail implements Serializable {
         this.content = content;
     }
 
+    public Mail() {
+    }
+
+    public Mail(String content) {
+        this.content = content;
+        createdOn = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mail mail = (Mail) o;
-        return id == mail.id && Objects.equals(content, mail.content);
+        return createdOn == mail.createdOn && Objects.equals(content, mail.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content);
+        return Objects.hash(createdOn, content);
     }
 }

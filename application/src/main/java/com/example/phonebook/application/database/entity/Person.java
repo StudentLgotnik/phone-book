@@ -24,12 +24,12 @@ public class Person implements Serializable {
     @Column(name = "age")
     private int age;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "phone_id", nullable = false)
     @JsonIgnoreProperties("user")
     private PhoneBook phoneBook;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
     @JsonIgnoreProperties("person")
     private List<Phone> phones;

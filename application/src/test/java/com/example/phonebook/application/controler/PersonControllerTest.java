@@ -103,8 +103,7 @@ public class PersonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is(databaseData.get(0).getName())))
-                .andExpect(jsonPath("$[0].secondName", is(databaseData.get(0).getSecondName())))
-                .andExpect(jsonPath("$[0].phones[0].phoneNumber", is("1234")));
+                .andExpect(jsonPath("$[0].secondName", is(databaseData.get(0).getSecondName())));
     }
 
     @Test

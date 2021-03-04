@@ -3,6 +3,7 @@ package com.example.phonebook.application.service;
 import com.example.phonebook.application.database.entity.User;
 import com.example.phonebook.application.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +17,14 @@ public class UserService implements IService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final String topicName = "phonebook";
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KafkaTemplate<String, String> kafkaTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -46,13 +50,7 @@ public class UserService implements IService<User> {
 
     public User createUserAndNotify(User user) {
         User created = create(user);
-//        Mail mail = new Mail();
-//        mail.setContent("New user was added: " + user);
-//        try {
-//            mailservice.sendMailAndSave(mail);
-//        } catch (MailjetException e) {
-//            e.printStackTrace();
-//        }
+        kafkaTemplate.send(topicName, "New user was added: " + user);
         return created;
     }
 

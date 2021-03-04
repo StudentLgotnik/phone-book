@@ -56,7 +56,7 @@ public class PersonServiceTest {
         Mockito.when(personRepository.findAll(any(Specification.class)))
                 .thenReturn(databaseData);
 
-        Mockito.when(personRepository.findAll())
+        Mockito.when(personRepository.getAll())
                 .thenReturn(databaseData);
 
         Mockito.when(personRepository.save(any(Person.class)))

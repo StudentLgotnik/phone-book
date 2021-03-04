@@ -2,11 +2,11 @@ package com.example.phonebook.application.integration;
 
 import com.example.phonebook.application.PhonebookApplication;
 import com.example.phonebook.application.database.configuration.PostgresqlContainer;
-import com.example.phonebook.application.database.entity.Person;
-import com.example.phonebook.application.database.entity.PhoneBook;
-import com.example.phonebook.application.database.entity.User;
+import com.example.phonebook.application.database.entity.*;
+import com.example.phonebook.application.database.repository.CountryCodeRepository;
 import com.example.phonebook.application.database.repository.PersonRepository;
 import com.example.phonebook.application.database.repository.PhoneBookRepository;
+import com.example.phonebook.application.database.repository.PhoneRepository;
 import com.example.phonebook.application.security.utils.JwtTokenUtil;
 import com.example.phonebook.application.service.UserService;
 import org.junit.Before;
@@ -26,7 +26,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -49,6 +48,12 @@ public class PersonIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
+    private CountryCodeRepository countryCodeRepository;
+
+    @Autowired
+    private PhoneRepository phoneRepository;
+
+    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
@@ -60,15 +65,19 @@ public class PersonIntegrationTest {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    private List<Person> databaseData;
+    private static List<Person> databaseData;
 
-    private User currentUser;
+    private static User currentUser;
 
     @Before
     public void setUp() {
-        currentUser = getCurrentUser();
+        if (currentUser == null) {
+            currentUser = getCurrentUser();
+        }
 
-        databaseData = getDatabaseDataSet();
+        if (databaseData == null) {
+            databaseData = getDatabaseDataSet();
+        }
     }
 
     @Test
@@ -133,6 +142,36 @@ public class PersonIntegrationTest {
         Person dbPerson2 = personRepository.save(person2);
         Person dbPerson3 = personRepository.save(person3);
         Person dbPerson4 = personRepository.save(person4);
+        dbPerson1.setPhoneBook(testPhoneBook);
+        dbPerson2.setPhoneBook(testPhoneBook);
+        dbPerson3.setPhoneBook(testPhoneBook);
+        dbPerson4.setPhoneBook(testPhoneBook);
+        List<CountryCode>  countryCodes = countryCodeRepository.findAll();
+
+        Phone phone1 = new Phone();
+        phone1.setPhoneNumber("123");
+        phone1.setPerson(dbPerson1);
+        phone1.setCountryCode(countryCodes.get(0));
+        phoneRepository.save(phone1);
+
+        Phone phone2 = new Phone();
+        phone2.setPhoneNumber("123");
+        phone2.setPerson(dbPerson2);
+        phone2.setCountryCode(countryCodes.get(0));
+        phoneRepository.save(phone2);
+
+        Phone phone3 = new Phone();
+        phone3.setPhoneNumber("123");
+        phone3.setPerson(dbPerson3);
+        phone3.setCountryCode(countryCodes.get(0));
+        phoneRepository.save(phone3);
+
+        Phone phone4 = new Phone();
+        phone4.setPhoneNumber("123");
+        phone4.setPerson(dbPerson4);
+        phone4.setCountryCode(countryCodes.get(0));
+        phoneRepository.save(phone4);
+
         return Arrays.asList(dbPerson1, dbPerson2, dbPerson3, dbPerson4);
     }
 

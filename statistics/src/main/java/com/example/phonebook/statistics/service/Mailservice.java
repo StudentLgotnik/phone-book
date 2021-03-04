@@ -46,8 +46,8 @@ public class Mailservice {
 
         TransactionalEmail message1 = TransactionalEmail
                 .builder()
-                .to(new SendContact("gagakix760@serohiv.com","gagakix760"))
-                .from(new SendContact("xwqwytpcnf@privacy-mail.top", "xwqwytpcnf"))
+                .to(new SendContact("kazzarin99@gmail.com","Default"))
+                .from(new SendContact("Default", "Максим"))
                 .subject("New user was added")
                 .textPart(mail.getContent())
                 .trackOpens(TrackOpens.ENABLED)

@@ -1,9 +1,27 @@
-version: '3.1'
+version: "3.9"
 
 services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - 9092:9092
+    hostname: kafka
+    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1 # docker-machine ip
+      KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
   postgresqldb:
     image: postgres:latest
-    network_mode: bridge
     container_name: postgres
     ports:
       - 5432:5432
@@ -12,16 +30,37 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
     restart: unless-stopped
-  app:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+  phonebook_app:
     container_name: springboot_phonebook
-    image: springboot_phonebook:latest
-    network_mode: bridge
-    expose:
-      - 8080
+    image: kazzarin99/springboot_phonebook:latest
+#    build:
+#      context: ./application
     ports:
       - 8080:8080
     restart: unless-stopped
     depends_on:
       - postgresqldb
+      - kafka
     links:
+      - kafka
       - postgresqldb
+  phonebook_statistics:
+    container_name: springboot_phonebook_statistics
+    image: kazzarin99/springboot_phonebook_statistics:latest
+#    build:
+#      context: ./statistics
+    ports:
+      - 8081:8081
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - kafka
+    links:
+      - kafka
+      - mongodb
