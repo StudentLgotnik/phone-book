@@ -29,16 +29,19 @@ public class PhoneBookService implements IService<PhoneBook>{
 
     @Override
     public PhoneBook create(PhoneBook phoneBook) {
-        return null;
+        return phoneBookRepository.save(phoneBook);
     }
 
     @Override
     public PhoneBook update(PhoneBook phoneBook) {
-        return null;
+        PhoneBook existed = phoneBookRepository.getOne(phoneBook.getId());
+        existed.setTitle(phoneBook.getTitle());
+        existed.setUser(phoneBook.getUser());
+        return phoneBookRepository.save(phoneBook);
     }
 
     @Override
     public void delete(int id) {
-
+        phoneBookRepository.deleteById(id);
     }
 }

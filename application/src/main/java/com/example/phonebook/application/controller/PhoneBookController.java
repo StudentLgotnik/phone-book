@@ -1,14 +1,13 @@
 package com.example.phonebook.application.controller;
 
+import com.example.phonebook.application.database.entity.Phone;
 import com.example.phonebook.application.database.entity.PhoneBook;
 import com.example.phonebook.application.service.PhoneBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +26,30 @@ public class PhoneBookController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PhoneBook>> getAll() {
         return ResponseEntity.ok(phoneBookService.getAll());
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PhoneBook> getOne(@PathVariable("id") String phoneBookId) {
+        return ResponseEntity.ok(phoneBookService.get(Integer.parseInt(phoneBookId)));
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PhoneBook> newPhoneBook(@RequestBody PhoneBook phoneBook) {
+        return ResponseEntity.ok(phoneBookService.create(phoneBook));
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PutMapping
+    public ResponseEntity<PhoneBook> updatePhoneBook(@RequestBody PhoneBook phoneBook) {
+        return ResponseEntity.ok(phoneBookService.update(phoneBook));
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity deletePhoneBook(@PathVariable("id") String phoneBookId) {
+        phoneBookService.delete(Integer.parseInt(phoneBookId));
+        return ResponseEntity.ok().build();
     }
 }
