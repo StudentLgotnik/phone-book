@@ -14,9 +14,46 @@
     <name>phonebook</name>
     <description>Demo project for Spring Boot</description>
 
+    <properties>
+        <java.version>1.8</java.version>
+        <kafka.version>2.5.8.RELEASE</kafka.version>
+        <boot.starter.web.version>2.4.0</boot.starter.web.version>
+        <boot.starter.data.mongo.version>2.4.3</boot.starter.data.mongo.version>
+        <boot.starter.data.jpa.version>2.4.3</boot.starter.data.jpa.version>
+        <boot.starter.cache.version>2.4.1</boot.starter.cache.version>
+        <boot.starter.security.version>2.4.1</boot.starter.security.version>
+        <boot.springfox.starter.version>3.0.0</boot.springfox.starter.version>
+        <boot.springfox.swaggre.ui.version>3.0.0</boot.springfox.swaggre.ui.version>
+        <springtx.version>5.3.3</springtx.version>
+        <mailjet.version>5.1.1</mailjet.version>
+        <postgresql.version>42.2.18</postgresql.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <flyway.core.version>7.5.1</flyway.core.version>
+        <junit.version>4.13.2</junit.version>
+        <mockito.core.version>3.7.7</mockito.core.version>
+        <testcontainers.version>1.10.6</testcontainers.version>
+    </properties>
+
     <modules>
         <module>application</module>
         <module>statistics</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${boot.starter.web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
