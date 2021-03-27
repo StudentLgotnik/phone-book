@@ -15,7 +15,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -38,9 +38,10 @@ services:
     restart: unless-stopped
   phonebook_app:
     container_name: springboot_phonebook
-    image: kazzarin99/springboot_phonebook:latest
-#    build:
-#      context: ./application
+#    image: kazzarin99/springboot_phonebook:latest
+    build:
+      context: ./application
+    command: -Dspring.profiles.active=prod
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -52,9 +53,10 @@ services:
       - postgresqldb
   phonebook_statistics:
     container_name: springboot_phonebook_statistics
-    image: kazzarin99/springboot_phonebook_statistics:latest
-#    build:
-#      context: ./statistics
+#    image: kazzarin99/springboot_phonebook_statistics:latest
+    build:
+      context: ./statistics
+    command: -Dspring.profiles.active=prod
     ports:
       - 8081:8081
     restart: unless-stopped
