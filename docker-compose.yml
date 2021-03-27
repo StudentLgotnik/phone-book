@@ -38,10 +38,12 @@ services:
     restart: unless-stopped
   phonebook_app:
     container_name: springboot_phonebook
-#    image: kazzarin99/springboot_phonebook:latest
-    build:
-      context: ./application
-    command: -Dspring.profiles.active=prod
+    image: kazzarin99/springboot_phonebook:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+#    build:
+#      context: ./application
+#    command: -Dspring.profiles.active=prod
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -53,9 +55,11 @@ services:
       - postgresqldb
   phonebook_statistics:
     container_name: springboot_phonebook_statistics
-#    image: kazzarin99/springboot_phonebook_statistics:latest
-    build:
-      context: ./statistics
+    image: kazzarin99/springboot_phonebook_statistics:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+#    build:
+#      context: ./statistics
     command: -Dspring.profiles.active=prod
     ports:
       - 8081:8081
