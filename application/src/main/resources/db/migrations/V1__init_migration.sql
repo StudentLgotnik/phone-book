@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS phonebook_schema.users
                     constraint users_pkey
                     primary key,
     login       varchar(255),
+    email       varchar(255),
+    phone       varchar(15),
     password    varchar(255)
 );
 

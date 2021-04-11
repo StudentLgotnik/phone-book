@@ -13,6 +13,9 @@ import java.util.Map;
 @Configuration
 public class KafkaTopicConfig {
 
+    private static final int DEFAULT_TOPIC_PARTITIONS = 3;
+    private static final int DEFAULT_TOPIC_REPLICATIONS = 1;
+
     @Value(value = "${spring.kafka.producer.bootstrap-servers}")
     private String bootstrapAddress;
 
@@ -25,6 +28,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic phoneBookTopic() {
-        return new NewTopic("phonebook", 1, (short) 1);
+        return new NewTopic("phonebook", DEFAULT_TOPIC_PARTITIONS, (short) DEFAULT_TOPIC_REPLICATIONS);
     }
 }

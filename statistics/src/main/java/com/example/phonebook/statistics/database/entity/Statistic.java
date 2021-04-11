@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Mail implements Serializable {
-
+public class Statistic implements Serializable {
 
     private String content;
 
@@ -27,10 +26,10 @@ public class Mail implements Serializable {
         this.content = content;
     }
 
-    public Mail() {
+    public Statistic() {
     }
 
-    public Mail(String content) {
+    public Statistic(String content) {
         this.content = content;
         createdOn = LocalDateTime.now();
     }
@@ -39,8 +38,8 @@ public class Mail implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Mail mail = (Mail) o;
-        return createdOn == mail.createdOn && Objects.equals(content, mail.content);
+        Statistic statistic = (Statistic) o;
+        return createdOn == statistic.createdOn && Objects.equals(content, statistic.content);
     }
 
     @Override

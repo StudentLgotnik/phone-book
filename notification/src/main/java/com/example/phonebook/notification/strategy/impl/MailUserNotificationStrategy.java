@@ -1,7 +1,8 @@
-package com.example.phonebook.statistics.service;
+package com.example.phonebook.notification.strategy.impl;
 
-import com.example.phonebook.statistics.database.entity.Mail;
-import com.example.phonebook.statistics.database.repository.MailRepository;
+import com.example.phonebook.dto.Event;
+import com.example.phonebook.notification.strategy.NotificationResult;
+import com.example.phonebook.notification.strategy.UserNotificationStrategy;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.errors.MailjetException;
@@ -10,33 +11,15 @@ import com.mailjet.client.transactional.SendEmailsRequest;
 import com.mailjet.client.transactional.TrackOpens;
 import com.mailjet.client.transactional.TransactionalEmail;
 import com.mailjet.client.transactional.response.SendEmailsResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class MailUserNotificationStrategy implements UserNotificationStrategy {
 
-@Service
-@Transactional
-public class Mailservice {
+    Logger logger = LoggerFactory.getLogger(MailUserNotificationStrategy.class);
 
-    private final MailRepository mailRepository;
-
-    @Autowired
-    public Mailservice(MailRepository mailRepository) {
-        this.mailRepository = mailRepository;
-    }
-
-    public List<Mail> getAll() {
-        return mailRepository.findAll();
-    }
-
-    public Mail create(Mail mail) {
-        return mailRepository.save(mail);
-    }
-
-    @Transactional(rollbackFor = MailjetException.class)
-    public void sendMailAndSave(Mail mail) throws MailjetException {
+    @Override
+    public NotificationResult notifyUser(Event event) {
         ClientOptions options = ClientOptions.builder()
                 .apiKey("a15141043b800372b8a8ab8f77d1359a")
                 .apiSecretKey("c182104ea76a3b73e132212672341681")
@@ -49,7 +32,7 @@ public class Mailservice {
                 .to(new SendContact("kazzarin99@gmail.com","Default"))
                 .from(new SendContact("Default", "Максим"))
                 .subject("New user was added")
-                .textPart(mail.getContent())
+                .textPart("New User added: " + event)
                 .trackOpens(TrackOpens.ENABLED)
                 .build();
 
@@ -58,12 +41,14 @@ public class Mailservice {
                 .message(message1)
                 .build();
 
-        SendEmailsResponse response = request.sendWith(client);
-
-        mailRepository.save(mail);
-    }
-
-    public void delete(int id) {
-        mailRepository.deleteById(id);
+        //TODO some retry logic
+        try {
+            SendEmailsResponse response = request.sendWith(client);
+            logger.info("Notification was sent by an email!");
+            return NotificationResult.Success;
+        } catch (MailjetException e) {
+            logger.error("Could not send notification by an email!", e);
+            return NotificationResult.Error;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.phonebook.statistics.controller;
 
-import com.example.phonebook.statistics.database.entity.Mail;
-import com.example.phonebook.statistics.service.Mailservice;
+import com.example.phonebook.statistics.database.entity.Statistic;
+import com.example.phonebook.statistics.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,23 +15,23 @@ import java.util.List;
 
 @Controller
 @RequestMapping(path = "/mail")
-public class MailController {
+public class StatisticController {
 
-    private Mailservice mailservice;
+    private StatisticService statisticService;
 
     @Autowired
-    public MailController(Mailservice mailservice) {
-        this.mailservice = mailservice;
+    public StatisticController(StatisticService statisticService) {
+        this.statisticService = statisticService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Mail>> getAll() {
-        return ResponseEntity.ok(mailservice.getAll());
+    public ResponseEntity<List<Statistic>> getAll() {
+        return ResponseEntity.ok(statisticService.getAll());
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Mail> createMail(@RequestBody Mail mail) {
-        return ResponseEntity.ok(mailservice.create(mail));
+    public ResponseEntity<Statistic> createStatistic(@RequestBody Statistic statistic) {
+        return ResponseEntity.ok(statisticService.create(statistic));
     }
 
 }

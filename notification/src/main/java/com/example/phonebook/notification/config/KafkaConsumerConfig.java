@@ -1,4 +1,4 @@
-package com.example.phonebook.statistics.config;
+package com.example.phonebook.notification.config;
 
 import com.example.phonebook.dto.Event;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -44,7 +44,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, String>
+    kafkaListenerContainerFactory() {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
@@ -54,9 +55,10 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Event> eventConsumerFactory() {
+
         JsonDeserializer<Event> deserializer = new JsonDeserializer<>();
         deserializer.setRemoveTypeHeaders(true);
-        deserializer.addTrustedPackages("*");
+        deserializer.addTrustedPackages("com.example.phonebook.dto.*");
 
         Map<String, Object> props = new HashMap<>();
         props.put(
@@ -70,7 +72,7 @@ public class KafkaConsumerConfig {
                 StringDeserializer.class);
         props.put(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                JsonDeserializer.class);
+                deserializer);
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
     }
 
