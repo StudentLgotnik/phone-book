@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: circleci/openjdk:stretch
         auth:
-          username: $DOCKERHUB_USER
+          username: DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
@@ -16,6 +16,7 @@ jobs:
       - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
       - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
       - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+      - run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       - run: docker image push kazzarin99/springboot_phonebook:latest
       - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
       - run: docker image push kazzarin99/springboot_phonebook_notification:latest
