@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  publish_to_dockerhub:
     docker:
       - image: circleci/openjdk:stretch
         auth:
@@ -10,24 +10,30 @@ jobs:
     steps:
       - checkout
       - run: mvn clean install
-  publish:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
-    steps:
-      - checkout
-      - setup_remote_docker
       - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
       - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
       - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
       - run: docker image push kazzarin99/springboot_phonebook:latest
       - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
       - run: docker image push kazzarin99/springboot_phonebook_notification:latest
+#  publish:
+#    docker:
+#      - image: circleci/buildpack-deps:stretch
+#        auth:
+#          username: $DOCKERHUB_USER
+#          password: $DOCKERHUB_PASSWORD
+#    steps:
+#      - checkout
+#      - setup_remote_docker
+#      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
+#      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
+#      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+#      - run: docker image push kazzarin99/springboot_phonebook:latest
+#      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
+#      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
 
 workflows:
   build-then-publish:
     jobs:
-      - build
-      - publish
+      - publish_to_dockerhub
+#      - publish
