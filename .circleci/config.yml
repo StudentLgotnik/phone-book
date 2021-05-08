@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  publish_to_dockerhub:
     docker:
       - image: circleci/openjdk:stretch
         auth:
@@ -9,8 +9,6 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-#      - attach_workspace:
-#          at: phonebook_temp
       - run: mvn clean install
       - setup_remote_docker
       - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
@@ -20,35 +18,21 @@ jobs:
       - run: docker image push kazzarin99/springboot_phonebook:latest
       - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
       - run: docker image push kazzarin99/springboot_phonebook_notification:latest
-#      - persist_to_workspace:
-#          root: phonebook_temp
-#          paths:
-#            - application/target
-#            - application/Dockerfile
-#            - statistics/target
-#            - statistics/Dockerfile
-#            - notification/target
-#            - notification/Dockerfile
-  publish:
+  mvn_test:
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: circleci/openjdk:stretch
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - setup_remote_docker
-      - attach_workspace:
-          at: phonebook_temp
-      - run: docker build -t kazzarin99/springboot_phonebook:latest phonebook_temp/application/.
-      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest phonebook_temp/statistics/.
-      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest phonebook_temp/notification/.
-      - run: docker image push kazzarin99/springboot_phonebook:latest
-      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
-      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
-
+      - run: mvn test
 workflows:
   build-then-publish:
     jobs:
-      - build
-#      - publish
+      - mvn_test
+      - publish_to_dockerhub:
+          filters:
+            branches:
+              only:
+                - master
