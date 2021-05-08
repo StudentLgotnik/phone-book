@@ -18,6 +18,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - setup_remote_docker
       - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
       - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
       - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
