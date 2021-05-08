@@ -32,17 +32,16 @@
         </dependency>
 
         <dependency>
+            <groupId>com.example.phonebook.event</groupId>
+            <artifactId>phonebookprotobuf</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.example.phonebook</groupId>
-            <artifactId>dto</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>

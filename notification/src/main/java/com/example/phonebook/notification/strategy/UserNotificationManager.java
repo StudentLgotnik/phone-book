@@ -1,6 +1,6 @@
 package com.example.phonebook.notification.strategy;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 
 public class UserNotificationManager {
 
@@ -10,7 +10,7 @@ public class UserNotificationManager {
         this.strategy = strategy;
     }
 
-    public NotificationResult notifyUser(Event event) {
+    public NotificationResult notifyUser(NewUser.NewUserEvent event) {
         return strategy.notifyUser(event);
     }
 }

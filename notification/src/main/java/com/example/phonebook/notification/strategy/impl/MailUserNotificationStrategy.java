@@ -1,6 +1,6 @@
 package com.example.phonebook.notification.strategy.impl;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 import com.example.phonebook.notification.strategy.NotificationResult;
 import com.example.phonebook.notification.strategy.UserNotificationStrategy;
 import com.mailjet.client.ClientOptions;
@@ -19,7 +19,7 @@ public class MailUserNotificationStrategy implements UserNotificationStrategy {
     Logger logger = LoggerFactory.getLogger(MailUserNotificationStrategy.class);
 
     @Override
-    public NotificationResult notifyUser(Event event) {
+    public NotificationResult notifyUser(NewUser.NewUserEvent event) {
         ClientOptions options = ClientOptions.builder()
                 .apiKey("a15141043b800372b8a8ab8f77d1359a")
                 .apiSecretKey("c182104ea76a3b73e132212672341681")

@@ -1,7 +1,8 @@
 package com.example.phonebook.application.config;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +42,16 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Event> eventProducerFactory() {
+    public ProducerFactory<String, NewUser.NewUserEvent> eventProducerFactory() {
+
+        class NewUserEventSerializer implements Serializer<NewUser.NewUserEvent> {
+
+            @Override
+            public byte[] serialize(String s, NewUser.NewUserEvent newUserEvent) {
+                return newUserEvent.toByteArray();
+            }
+
+        }
 
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
@@ -52,12 +62,13 @@ public class KafkaProducerConfig {
                 StringSerializer.class);
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
+                NewUserEventSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(configProps, new StringSerializer(), new NewUserEventSerializer());
     }
 
     @Bean
-    public KafkaTemplate<String, Event> eventKafkaTemplate() {
+    public KafkaTemplate<String, NewUser.NewUserEvent> eventKafkaTemplate() {
         return new KafkaTemplate<>(eventProducerFactory());
     }
 }

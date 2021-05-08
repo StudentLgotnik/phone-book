@@ -15,6 +15,16 @@
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://phonebook.jfrog.io/artifactory/phonebook-java/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <java.version>1.8</java.version>
         <kafka.version>2.6.0</kafka.version>
@@ -33,13 +43,13 @@
         <junit.version>4.13.2</junit.version>
         <mockito.core.version>3.7.7</mockito.core.version>
         <testcontainers.version>1.10.6</testcontainers.version>
+        <phonebookprotobuf.version>1.0.0</phonebookprotobuf.version>
     </properties>
 
     <modules>
         <module>application</module>
         <module>statistics</module>
         <module>notification</module>
-        <module>dto</module>
     </modules>
 
     <dependencyManagement>
@@ -55,6 +65,12 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
                 <version>${kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.example.phonebook.event</groupId>
+                <artifactId>phonebookprotobuf</artifactId>
+                <version>${phonebookprotobuf.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

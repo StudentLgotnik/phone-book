@@ -1,6 +1,6 @@
 package com.example.phonebook.notification.service;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 import com.example.phonebook.notification.strategy.NotificationResult;
 import com.example.phonebook.notification.strategy.UserNotificationManager;
 import com.example.phonebook.notification.strategy.impl.DoveUserNotificationStrategy;
@@ -17,7 +17,7 @@ public class NotificationService {
 
     Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
-    public void notifyAboutEvent(Event event) {
+    public void notifyAboutEvent(NewUser.NewUserEvent event) {
 
         UserNotificationManager emailNotificationManager = new UserNotificationManager(new MailUserNotificationStrategy());
 

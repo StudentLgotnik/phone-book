@@ -1,8 +1,12 @@
 package com.example.phonebook.statistics.config;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,10 +57,22 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, Event> eventConsumerFactory() {
-        JsonDeserializer<Event> deserializer = new JsonDeserializer<>();
-        deserializer.setRemoveTypeHeaders(true);
-        deserializer.addTrustedPackages("*");
+    public ConsumerFactory<String, NewUser.NewUserEvent> eventConsumerFactory() {
+
+        class NewUserEventDeserializer implements Deserializer<NewUser.NewUserEvent> {
+
+            Logger logger = LoggerFactory.getLogger(NewUserEventDeserializer.class);
+
+            @Override
+            public NewUser.NewUserEvent deserialize(String s, byte[] bytes) {
+                try {
+                    return NewUser.NewUserEvent.parseFrom(bytes);
+                } catch (InvalidProtocolBufferException e) {
+                    logger.error("New user event parsing fails", e);
+                    return null;
+                }
+            }
+        }
 
         Map<String, Object> props = new HashMap<>();
         props.put(
@@ -70,14 +86,14 @@ public class KafkaConsumerConfig {
                 StringDeserializer.class);
         props.put(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                JsonDeserializer.class);
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
+                NewUserEventDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new NewUserEventDeserializer());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Event> eventKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, NewUser.NewUserEvent> eventKafkaListenerContainerFactory() {
 
-        ConcurrentKafkaListenerContainerFactory<String, Event> factory =
+        ConcurrentKafkaListenerContainerFactory<String, NewUser.NewUserEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(eventConsumerFactory());
         return factory;

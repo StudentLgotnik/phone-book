@@ -2,8 +2,7 @@ package com.example.phonebook.application.service;
 
 import com.example.phonebook.application.database.entity.User;
 import com.example.phonebook.application.database.repository.UserRepository;
-import com.example.phonebook.dto.Event;
-import com.example.phonebook.dto.impl.NewUserEvent;
+import com.example.phonebook.event.NewUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +18,11 @@ public class UserService implements IService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final KafkaTemplate<String, Event> eventKafkaTemplate;
+    private final KafkaTemplate<String, NewUser.NewUserEvent> eventKafkaTemplate;
     private final String topicName = "phonebook";
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KafkaTemplate<String, Event> eventKafkaTemplate) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KafkaTemplate<String, NewUser.NewUserEvent> eventKafkaTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventKafkaTemplate = eventKafkaTemplate;
@@ -52,7 +51,12 @@ public class UserService implements IService<User> {
 
     public User createUserAndNotify(User user) {
         User created = create(user);
-        Event newUserEvent = new NewUserEvent(created.getLogin(), created.getEmail(), created.getPhone());
+        NewUser.NewUserEvent newUserEvent = NewUser.NewUserEvent.newBuilder()
+                .setLogin(created.getLogin())
+                .setEmail(created.getEmail())
+                .setPhone(created.getPhone())
+                .build();
+
         eventKafkaTemplate.send(topicName, newUserEvent);
         return created;
     }

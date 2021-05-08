@@ -1,7 +1,7 @@
 package com.example.phonebook.statistics.listeners;
 
+import com.example.phonebook.event.NewUser;
 import com.example.phonebook.statistics.database.entity.Statistic;
-import com.example.phonebook.dto.Event;
 import com.example.phonebook.statistics.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,7 +18,7 @@ public class EventListener {
     }
 
     @KafkaListener(topics = "phonebook", groupId = "phonebook-statistic", containerFactory = "eventKafkaListenerContainerFactory")
-    public void listenEvents(Event event) {
+    public void listenEvents(NewUser.NewUserEvent event) {
         Statistic receivedEvent = new Statistic("New User added: " + event);
         statisticService.create(receivedEvent);
 

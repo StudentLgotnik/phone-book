@@ -1,8 +1,7 @@
 package com.example.phonebook.notification.listeners;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 import com.example.phonebook.notification.service.NotificationService;
-import com.mailjet.client.errors.MailjetException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ public class EventListener {
     }
 
     @KafkaListener(topics = "phonebook", groupId = "phonebook-notification",  containerFactory = "eventKafkaListenerContainerFactory")
-    public void listenEvents(Event event) {
+    public void listenEvents(NewUser.NewUserEvent event) {
         notificationService.notifyAboutEvent(event);
     }
 }

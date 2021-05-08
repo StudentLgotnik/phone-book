@@ -1,9 +1,9 @@
 package com.example.phonebook.notification.strategy;
 
-import com.example.phonebook.dto.Event;
+import com.example.phonebook.event.NewUser;
 
 public interface UserNotificationStrategy {
 
-    NotificationResult notifyUser(Event event);
+    NotificationResult notifyUser(NewUser.NewUserEvent event);
 
 }
