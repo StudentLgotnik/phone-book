@@ -9,15 +9,31 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - run: mvn clean install
+      - run:
+          name: Build maven project
+          command: mvn clean install
       - setup_remote_docker
-      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
-      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
-      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
-      - run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASS
-      - run: docker image push kazzarin99/springboot_phonebook:latest
-      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
-      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
+      - run:
+          name: Build application image
+          command: docker build -t kazzarin99/springboot_phonebook:latest application/.
+      - run:
+          name: Build statistics image
+          command: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
+      - run:
+          name: Build notification image
+          command: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+      - run:
+          name: Login to docker hub
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASS
+      - run:
+          name: Push application image to docker hub
+          command: docker image push kazzarin99/springboot_phonebook:latest
+      - run:
+          name: Push statistics image to docker hub
+          command: docker image push kazzarin99/springboot_phonebook_statistics:latest
+      - run:
+          name: Push notification image to docker hub
+          command: docker image push kazzarin99/springboot_phonebook_notification:latest
   mvn_test:
     docker:
       - image: circleci/openjdk:stretch
@@ -26,7 +42,9 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - run: mvn test
+      - run:
+          name: Test application
+          command: mvn test
 workflows:
   build-then-publish:
     jobs:
