@@ -17,11 +17,15 @@
 
     <repositories>
         <repository>
-            <id>central</id>
+            <id>artifactory</id>
             <url>https://phonebook.jfrog.io/artifactory/phonebook-java/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://mvnrepository.com/repos/central</url>
         </repository>
     </repositories>
 
