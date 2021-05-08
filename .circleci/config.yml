@@ -33,9 +33,9 @@ jobs:
       - setup_remote_docker
       - attach_workspace:
           at: ~/phonebook
-      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
-      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
-      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+      - run: docker build -t kazzarin99/springboot_phonebook:latest phonebook/application/.
+      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest phonebook/statistics/.
+      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest phonebook/notification/.
       - run: docker image push kazzarin99/springboot_phonebook:latest
       - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
       - run: docker image push kazzarin99/springboot_phonebook_notification:latest
