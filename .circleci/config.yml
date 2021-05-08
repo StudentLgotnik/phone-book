@@ -9,18 +9,25 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - attach_workspace:
-          at: phonebook_temp
+#      - attach_workspace:
+#          at: phonebook_temp
       - run: mvn clean install
-      - persist_to_workspace:
-          root: phonebook_temp
-          paths:
-            - application/target
-            - application/Dockerfile
-            - statistics/target
-            - statistics/Dockerfile
-            - notification/target
-            - notification/Dockerfile
+      - setup_remote_docker
+      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
+      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
+      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+      - run: docker image push kazzarin99/springboot_phonebook:latest
+      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
+      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
+#      - persist_to_workspace:
+#          root: phonebook_temp
+#          paths:
+#            - application/target
+#            - application/Dockerfile
+#            - statistics/target
+#            - statistics/Dockerfile
+#            - notification/target
+#            - notification/Dockerfile
   publish:
     docker:
       - image: circleci/buildpack-deps:stretch
@@ -43,4 +50,4 @@ workflows:
   build-then-publish:
     jobs:
       - build
-      - publish
+#      - publish
