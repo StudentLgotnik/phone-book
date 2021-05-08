@@ -1,13 +1,38 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Use a package of configuration called an orb.
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+
+jobs:
+  publish_to_dockerhub:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - run: mvn clean install
+      - setup_remote_docker
+      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
+      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
+      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
+      - run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASS
+      - run: docker image push kazzarin99/springboot_phonebook:latest
+      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
+      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
+  mvn_test:
+    docker:
+      - image: circleci/openjdk:stretch
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - run: mvn test
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  build-then-publish:
     jobs:
-      - welcome/run
+      - mvn_test
+      - publish_to_dockerhub:
+          filters:
+            branches:
+              only:
+                - master
