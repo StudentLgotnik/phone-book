@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   build:
-    working_directory: ~/phonebook_temp
+    working_directory: phonebook_temp
     docker:
       - image: circleci/openjdk:stretch
         auth:
@@ -11,10 +11,10 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/phonebook_temp
+          at: phonebook_temp
       - run: mvn clean install
       - persist_to_workspace:
-          root: ~/phonebook_temp
+          root: phonebook_temp
           paths:
             - application/target
             - application/Dockerfile
@@ -28,12 +28,12 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
-    working_directory: ~/phonebook_temp
+    working_directory: phonebook_temp
     steps:
       - checkout
       - setup_remote_docker
       - attach_workspace:
-          at: ~/phonebook_temp
+          at: phonebook_temp
       - run: docker build -t kazzarin99/springboot_phonebook:latest phonebook_temp/application/.
       - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest phonebook_temp/statistics/.
       - run: docker build -t kazzarin99/springboot_phonebook_notification:latest phonebook_temp/notification/.
