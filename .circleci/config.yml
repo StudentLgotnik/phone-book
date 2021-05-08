@@ -2,7 +2,6 @@ version: 2.1
 
 jobs:
   build:
-    working_directory: phonebook_temp
     docker:
       - image: circleci/openjdk:stretch
         auth:
@@ -28,7 +27,6 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
-    working_directory: phonebook_temp
     steps:
       - checkout
       - setup_remote_docker
