@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  publish_to_dockerhub:
+  build:
     docker:
       - image: circleci/openjdk:stretch
         auth:
@@ -9,31 +9,39 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/phonebook
       - run: mvn clean install
+      - persist_to_workspace:
+          root: ~/phonebook
+          paths:
+            - application/target
+            - application/Dockerfile
+            - statistics/target
+            - statistics/Dockerfile
+            - notification/target
+            - notification/Dockerfile
+  publish:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+    working_directory: ~/phonebook
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/phonebook
       - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
       - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
       - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
       - run: docker image push kazzarin99/springboot_phonebook:latest
       - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
       - run: docker image push kazzarin99/springboot_phonebook_notification:latest
-#  publish:
-#    docker:
-#      - image: circleci/buildpack-deps:stretch
-#        auth:
-#          username: $DOCKERHUB_USER
-#          password: $DOCKERHUB_PASSWORD
-#    steps:
-#      - checkout
-#      - setup_remote_docker
-#      - run: docker build -t kazzarin99/springboot_phonebook:latest application/.
-#      - run: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
-#      - run: docker build -t kazzarin99/springboot_phonebook_notification:latest notification/.
-#      - run: docker image push kazzarin99/springboot_phonebook:latest
-#      - run: docker image push kazzarin99/springboot_phonebook_statistics:latest
-#      - run: docker image push kazzarin99/springboot_phonebook_notification:latest
 
 workflows:
   build-then-publish:
     jobs:
-      - publish_to_dockerhub
-#      - publish
+      - build
+      - publish
