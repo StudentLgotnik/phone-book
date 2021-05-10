@@ -56,7 +56,7 @@ services:
       - kafka
       - postgresqldb
   phonebook_statistics:
-#    container_name: springboot_phonebook_statistics
+    container_name: springboot_phonebook_statistics
     image: kazzarin99/springboot_phonebook_statistics:latest
     environment:
       - SPRING_PROFILES_ACTIVE=prod

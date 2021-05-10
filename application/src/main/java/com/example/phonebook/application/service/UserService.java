@@ -3,6 +3,8 @@ package com.example.phonebook.application.service;
 import com.example.phonebook.application.database.entity.User;
 import com.example.phonebook.application.database.repository.UserRepository;
 import com.example.phonebook.event.NewUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,8 @@ import java.util.List;
 @Service
 @Transactional
 public class UserService implements IService<User> {
+
+    private Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -51,6 +55,7 @@ public class UserService implements IService<User> {
 
     public User createUserAndNotify(User user) {
         User created = create(user);
+        logger.info("User successfully created");
         NewUser.NewUserEvent newUserEvent = NewUser.NewUserEvent.newBuilder()
                 .setLogin(created.getLogin())
                 .setEmail(created.getEmail())
@@ -58,6 +63,7 @@ public class UserService implements IService<User> {
                 .build();
 
         eventKafkaTemplate.send(topicName, newUserEvent);
+        logger.info("New user event sent");
         return created;
     }
 
