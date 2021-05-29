@@ -17,6 +17,9 @@ jobs:
           name: Build application image
           command: docker build -t kazzarin99/springboot_phonebook:latest application/.
       - run:
+          name: Build user service image
+          command: docker build -t kazzarin99/springboot_phonebook_user_service:latest userservice/.
+      - run:
           name: Build statistics image
           command: docker build -t kazzarin99/springboot_phonebook_statistics:latest statistics/.
       - run:
@@ -28,6 +31,9 @@ jobs:
       - run:
           name: Push application image to docker hub
           command: docker image push kazzarin99/springboot_phonebook:latest
+      - run:
+          name: Push application image to docker hub
+          command: docker image push kazzarin99/springboot_phonebook_user_service:latest
       - run:
           name: Push statistics image to docker hub
           command: docker image push kazzarin99/springboot_phonebook_statistics:latest
