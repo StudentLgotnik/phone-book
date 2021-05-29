@@ -89,3 +89,21 @@ services:
       - kafka
     links:
       - kafka
+  phonebook_user_service:
+    container_name: springboot_phonebook_user_service
+    image: kazzarin99/springboot_phonebook_user_service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    #    For local build
+    #    build:
+    #      context: ./application
+    command: -Dspring.profiles.active=prod
+    ports:
+      - 8083:8083
+    restart: unless-stopped
+    depends_on:
+      - postgresqldb
+      - kafka
+    links:
+      - kafka
+      - postgresqldb

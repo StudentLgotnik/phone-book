@@ -59,6 +59,7 @@
         <module>application</module>
         <module>statistics</module>
         <module>notification</module>
+        <module>userservice</module>
     </modules>
 
     <dependencyManagement>
