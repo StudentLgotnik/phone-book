@@ -70,7 +70,8 @@ public class UserService implements IService<User> {
     @Override
     @Transactional
     public User update(User user) {
-        User forUpdate = userRepository.getOne(user.getId());
+        User forUpdate = userRepository.findById(user.getId())
+                .orElseThrow((() -> new IllegalArgumentException(String.format("User with id %s doesn't exist", user.getId()))));
         forUpdate.setLogin(user.getLogin());
         forUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(forUpdate);

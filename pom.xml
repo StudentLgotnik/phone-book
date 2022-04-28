@@ -18,7 +18,7 @@
     <repositories>
         <repository>
             <id>artifactory</id>
-            <url>https://phonebook.jfrog.io/artifactory/phonebook-java/</url>
+            <url>https://mkaza.jfrog.io/artifactory/phonebook-java/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -51,7 +51,7 @@
         <flyway.core.version>7.5.1</flyway.core.version>
         <junit.version>4.13.2</junit.version>
         <mockito.core.version>3.7.7</mockito.core.version>
-        <testcontainers.version>1.10.6</testcontainers.version>
+        <testcontainers.version>1.16.3</testcontainers.version>
         <phonebookprotobuf.version>1.0.0</phonebookprotobuf.version>
     </properties>
 

@@ -24,7 +24,7 @@ public class PersonService implements IService<Person> {
 
     @Override
     public List<Person> getAll() {
-        return personRepository.getAll();
+        return personRepository.findAll();
     }
 
     @Cacheable("findpersons")
@@ -53,7 +53,8 @@ public class PersonService implements IService<Person> {
     @Override
     @Transactional
     public Person update(Person person) {
-        Person forUpdate = personRepository.getOne(person.getId());
+        Person forUpdate = personRepository.findById(person.getId())
+                .orElseThrow((() -> new IllegalArgumentException(String.format("Person with id %s doesn't exist", person.getId()))));
         forUpdate.setName(person.getName());
         forUpdate.setSecondName(person.getSecondName());
         forUpdate.setAge(person.getAge());

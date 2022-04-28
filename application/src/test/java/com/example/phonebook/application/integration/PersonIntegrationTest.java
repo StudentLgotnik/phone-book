@@ -3,8 +3,8 @@ package com.example.phonebook.application.integration;
 import com.example.phonebook.application.PhonebookApplication;
 import com.example.phonebook.application.database.configuration.PostgresqlContainer;
 import com.example.phonebook.application.database.entity.*;
-import com.example.phonebook.application.database.repository.CountryCodeRepository;
-import com.example.phonebook.application.database.repository.PersonRepository;
+import com.example.phonebook.application.database.repository.jpa.CountryCodeJpaRepository;
+import com.example.phonebook.application.database.repository.jpa.PersonJpaRepository;
 import com.example.phonebook.application.database.repository.PhoneBookRepository;
 import com.example.phonebook.application.database.repository.PhoneRepository;
 import com.example.phonebook.application.security.utils.JwtTokenUtil;
@@ -48,13 +48,13 @@ public class PersonIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private CountryCodeRepository countryCodeRepository;
+    private CountryCodeJpaRepository countryCodeRepository;
 
     @Autowired
     private PhoneRepository phoneRepository;
 
     @Autowired
-    private PersonRepository personRepository;
+    private PersonJpaRepository personRepository;
 
     @Autowired
     private PhoneBookRepository phoneBookRepository;

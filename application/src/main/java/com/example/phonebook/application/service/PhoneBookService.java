@@ -19,7 +19,7 @@ public class PhoneBookService implements IService<PhoneBook>{
 
     @Override
     public List<PhoneBook> getAll() {
-        return phoneBookRepository.getAll();
+        return phoneBookRepository.findAll();
     }
 
     @Override
@@ -34,7 +34,8 @@ public class PhoneBookService implements IService<PhoneBook>{
 
     @Override
     public PhoneBook update(PhoneBook phoneBook) {
-        PhoneBook existed = phoneBookRepository.getOne(phoneBook.getId());
+        PhoneBook existed = phoneBookRepository.findById(phoneBook.getId())
+                .orElseThrow((() -> new IllegalArgumentException(String.format("Phone book code with id %s doesn't exist", phoneBook.getId()))));
         existed.setTitle(phoneBook.getTitle());
         existed.setUser(phoneBook.getUser());
         return phoneBookRepository.save(phoneBook);
