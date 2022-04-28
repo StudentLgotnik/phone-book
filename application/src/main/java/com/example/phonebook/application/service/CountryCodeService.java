@@ -38,7 +38,8 @@ public class CountryCodeService implements IService<CountryCode> {
 
     @Override
     public CountryCode update(CountryCode countryCode) {
-        CountryCode forUpdate = countryCodeRepository.getOne(countryCode.getId());
+        CountryCode forUpdate = countryCodeRepository.findById(countryCode.getId())
+                .orElseThrow((() -> new IllegalArgumentException(String.format("Country code with id %s doesn't exist", countryCode.getId()))));
         forUpdate.setCode(countryCode.getCode());
         forUpdate.setCountry(countryCode.getCountry());
         return countryCodeRepository.save(forUpdate);

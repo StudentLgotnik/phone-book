@@ -22,7 +22,7 @@ public class PhoneService implements IService<Phone>{
 
     @Override
     public List<Phone> getAll() {
-        return phoneRepository.getAll();
+        return phoneRepository.findAll();
     }
 
     @Override
@@ -38,7 +38,8 @@ public class PhoneService implements IService<Phone>{
 
     @Override
     public Phone update(Phone phone) {
-        Phone forUpdate = phoneRepository.getOne(phone.getId());
+        Phone forUpdate = phoneRepository.findById(phone.getId())
+                .orElseThrow((() -> new IllegalArgumentException(String.format("Phone code with id %s doesn't exist", phone.getId()))));
         forUpdate.setCountryCode(phone.getCountryCode());
         forUpdate.setPhoneNumber(phone.getPhoneNumber());
         return phoneRepository.save(forUpdate);

@@ -1,7 +1,7 @@
 package com.example.phonebook.application.service;
 
 import com.example.phonebook.application.database.entity.Person;
-import com.example.phonebook.application.database.repository.PersonRepository;
+import com.example.phonebook.application.database.repository.jpa.PersonJpaRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ public class PersonServiceTest {
     static class PersonServiceTestContextConfiguration {
 
         @Autowired
-        private PersonRepository employeeRepository;
+        private PersonJpaRepository employeeRepository;
 
         @Bean
         public PersonService employeeService() {
@@ -39,7 +39,7 @@ public class PersonServiceTest {
     private PersonService personService;
 
     @MockBean
-    private PersonRepository personRepository;
+    private PersonJpaRepository personRepository;
 
     private List<Person> databaseData;
 
@@ -56,7 +56,7 @@ public class PersonServiceTest {
         Mockito.when(personRepository.findAll(any(Specification.class)))
                 .thenReturn(databaseData);
 
-        Mockito.when(personRepository.getAll())
+        Mockito.when(personRepository.findAll())
                 .thenReturn(databaseData);
 
         Mockito.when(personRepository.save(any(Person.class)))
