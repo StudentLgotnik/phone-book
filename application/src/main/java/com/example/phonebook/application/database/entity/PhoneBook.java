@@ -2,6 +2,7 @@ package com.example.phonebook.application.database.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +15,12 @@ public class PhoneBook implements Serializable {
 
     @Column(name = "title")
     private String title;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = true)
@@ -43,16 +50,32 @@ public class PhoneBook implements Serializable {
         this.title = title;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhoneBook phoneBook = (PhoneBook) o;
-        return id == phoneBook.id && Objects.equals(user, phoneBook.user);
+        return id == phoneBook.id && Objects.equals(title, phoneBook.title) && Objects.equals(creationDate, phoneBook.creationDate) && Objects.equals(updateDate, phoneBook.updateDate) && Objects.equals(user, phoneBook.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user);
+        return Objects.hash(id, title, creationDate, updateDate, user);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.phonebook.application.controller;
 
-import com.example.phonebook.application.database.entity.Phone;
 import com.example.phonebook.application.database.entity.PhoneBook;
+import com.example.phonebook.application.database.repository.queries.PhoneBookQueries;
 import com.example.phonebook.application.service.PhoneBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,10 +16,12 @@ import java.util.List;
 public class PhoneBookController {
 
     private final PhoneBookService phoneBookService;
+    private final PhoneBookQueries phoneBookQueries;
 
     @Autowired
-    public PhoneBookController(PhoneBookService restService) {
+    public PhoneBookController(PhoneBookService restService, PhoneBookQueries phoneBookQueries) {
         this.phoneBookService = restService;
+        this.phoneBookQueries = phoneBookQueries;
     }
 
     @PreAuthorize("permitAll()")
@@ -51,5 +53,11 @@ public class PhoneBookController {
     public ResponseEntity deletePhoneBook(@PathVariable("id") String phoneBookId) {
         phoneBookService.delete(Integer.parseInt(phoneBookId));
         return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "/have-users-more-than")
+    public ResponseEntity<List<PhoneBook>> deletePhoneBook(@RequestParam("personsNumber") int personsNumber) {
+        return ResponseEntity.ok(phoneBookQueries.getPhoneBookWithUserMoreThan(personsNumber));
     }
 }
