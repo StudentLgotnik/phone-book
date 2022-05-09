@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,9 @@ public class Person implements Serializable {
 
     @Column(name = "age")
     private int age;
+
+    @Column(name = "birth_day")
+    private LocalDateTime birthDay;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "phone_id", nullable = false)

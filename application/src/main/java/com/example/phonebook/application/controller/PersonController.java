@@ -1,6 +1,7 @@
 package com.example.phonebook.application.controller;
 
 import com.example.phonebook.application.database.entity.Person;
+import com.example.phonebook.application.database.repository.queries.PersonQueries;
 import com.example.phonebook.application.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,16 +16,24 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService personService;
+    private final PersonQueries personQueries;
 
     @Autowired
-    public PersonController(PersonService restService) {
+    public PersonController(PersonService restService, PersonQueries personQueries) {
         this.personService = restService;
+        this.personQueries = personQueries;
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Person>> getAll() {
         return ResponseEntity.ok(personService.getAll());
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "/tittle-country", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Person>> getAllPhBookTitleAndPhoneCountry(@RequestParam("title") String title, @RequestParam("country") String country) {
+        return ResponseEntity.ok(personQueries.getPersonsFromPhBookByCountry(title, country));
     }
 
     @PreAuthorize("hasAuthority('USER')")

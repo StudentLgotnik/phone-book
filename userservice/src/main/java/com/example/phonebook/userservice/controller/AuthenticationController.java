@@ -1,12 +1,11 @@
 package com.example.phonebook.userservice.controller;
 
-import com.example.phonebook.userservice.database.entity.User;
+import com.example.phonebook.userservice.database.entity.queries.UserQueries;
 import com.example.phonebook.userservice.dto.UserDto;
 import com.example.phonebook.userservice.security.details.PhoneBookUserDetails;
 import com.example.phonebook.userservice.security.utils.JwtTokenUtil;
 import com.example.phonebook.userservice.service.AuthenticationResult;
 import com.example.phonebook.userservice.service.IUserService;
-import com.example.phonebook.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,10 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -26,12 +26,14 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final IUserService userService;
+    private final UserQueries userQueries;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, IUserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, IUserService userService, UserQueries userQueries) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userService = userService;
+        this.userQueries = userQueries;
     }
 
     @PreAuthorize("permitAll()")
@@ -57,24 +59,22 @@ public class AuthenticationController {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(authenticationResult.getMessage());
         }
-//        try {
-//            Authentication authenticate = authenticationManager
-//                    .authenticate(
-//                            new UsernamePasswordAuthenticationToken(
-//                                    userBody.getLogin(), userBody.getPassword()
-//                            )
-//                    );
-//
-//            User user = ((PhoneBookUserDetails) authenticate.getPrincipal()).getUser();
-//
-//            return ResponseEntity.ok()
-//                    .header(
-//                            HttpHeaders.AUTHORIZATION,
-//                            jwtTokenUtil.generateAccessToken(user)
-//                    )
-//                    .body(user);
-//        } catch (BadCredentialsException ex) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping(value = "/change-login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> changeLogin(@RequestParam String login) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PhoneBookUserDetails user = (PhoneBookUserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(userQueries.updateLogin(user.getUser().getId(), login));
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PhoneBookUserDetails user = (PhoneBookUserDetails) authentication.getPrincipal();
+        userQueries.deleteUser(user.getUser().getId());
+        return ResponseEntity.noContent().build();
     }
 }

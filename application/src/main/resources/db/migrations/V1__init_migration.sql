@@ -26,13 +26,15 @@ ALTER TABLE phonebook_schema.users owner to postgres;
 
 CREATE TABLE IF NOT EXISTS phonebook_schema.phone_books
 (
-    id          serial not null
-                    constraint phone_books_pkey
-                    primary key,
-    user_id     integer not null
-                    constraint fklxp5djgvdxlwwmiievhg9vg8x
-                    references phonebook_schema.users,
-    title       varchar(255)
+    id              serial not null
+                        constraint phone_books_pkey
+                        primary key,
+    user_id         integer not null
+                        constraint fklxp5djgvdxlwwmiievhg9vg8x
+                        references phonebook_schema.users,
+    title           varchar(255),
+    creation_date   timestamp,
+    update_date     timestamp
 );
 
 ALTER TABLE phonebook_schema.phone_books owner to postgres;
@@ -45,6 +47,7 @@ CREATE TABLE IF NOT EXISTS phonebook_schema.persons
     age             integer,
     name            varchar(255),
     second_name     varchar(255),
+    birth_day       timestamp,
     phone_id        integer not null
                         constraint fkbynpo6m9a5e5ogwp3o3msuwpm
                         references phonebook_schema.phone_books
@@ -58,6 +61,10 @@ CREATE TABLE IF NOT EXISTS phonebook_schema.phones
                             constraint phones_pkey
                             primary key,
     phone_number        varchar(9),
+    operator_name       varchar(255),
+    funds               double precision,
+    registration_date   timestamp,
+    activation_date     timestamp,
     country_code_id     integer
                             constraint fk5l1vv0uskatt001b4vi3jb9vq
                             references phonebook_schema.area_codes,
