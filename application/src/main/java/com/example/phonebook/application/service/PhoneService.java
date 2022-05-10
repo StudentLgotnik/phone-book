@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -23,6 +24,12 @@ public class PhoneService implements IService<Phone>{
     @Override
     public List<Phone> getAll() {
         return phoneRepository.getAll();
+    }
+
+    public List<Double> getFundsPoweredTo(double powNumber) {
+        return phoneRepository.getAll().stream()
+                .map(p -> Math.pow(p.getFunds(), powNumber))
+                .collect(Collectors.toList());
     }
 
     @Override
