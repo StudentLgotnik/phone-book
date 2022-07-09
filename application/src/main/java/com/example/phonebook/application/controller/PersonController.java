@@ -4,12 +4,14 @@ import com.example.phonebook.application.database.entity.Person;
 import com.example.phonebook.application.database.repository.queries.PersonQueries;
 import com.example.phonebook.application.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/person")
@@ -49,6 +51,18 @@ public class PersonController {
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Person> getOne(@PathVariable("id") String personId) {
         return ResponseEntity.ok(personService.get(Integer.parseInt(personId)));
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "/persons-groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Pair<String, String>>> getAgePersonsGroups() {
+        return ResponseEntity.ok(personQueries.getAgePersonsGroups());
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "/persons-groups2", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Map.Entry<String, String>>> getAgePersonsGroups2() {
+        return ResponseEntity.ok(personQueries.getAgePersonsGroups2());
     }
 
     @PreAuthorize("hasAuthority('USER')")

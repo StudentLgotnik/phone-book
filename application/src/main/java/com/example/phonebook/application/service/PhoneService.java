@@ -1,6 +1,7 @@
 package com.example.phonebook.application.service;
 
 import com.example.phonebook.application.database.entity.Phone;
+import com.example.phonebook.application.database.projection.PhonePhoneNumberProjection;
 import com.example.phonebook.application.database.repository.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -25,10 +27,22 @@ public class PhoneService implements IService<Phone>{
         return phoneRepository.getAll();
     }
 
+    public List<Double> getFundsPoweredTo(double powNumber) {
+        return phoneRepository.getAll().stream()
+                .map(p -> Math.pow(p.getFunds(), powNumber))
+                .collect(Collectors.toList());
+    }
+
     @Override
     @Cacheable("phones")
     public Phone get(int id){
         return phoneRepository.findById(id).orElse(null);
+    }
+
+    public List<String> getPhonesNumbersProjection() {
+        return phoneRepository.findAllProjectedBy().stream()
+                .map(PhonePhoneNumberProjection::getFullPhoneNumber)
+                .collect(Collectors.toList());
     }
 
     @Override

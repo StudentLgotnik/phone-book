@@ -26,6 +26,6 @@ public class PersonRowMapper implements RowMapper<Person> {
         person.setName(rs.getString("NAME"));
         person.setSecondName(rs.getString("SECOND_NAME"));
         person.setAge(rs.getInt("AGE"));
-        return null;
+        return person;
     }
 }
