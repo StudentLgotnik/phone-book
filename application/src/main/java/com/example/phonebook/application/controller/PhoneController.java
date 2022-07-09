@@ -51,6 +51,12 @@ public class PhoneController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value = "/just-numbers-projection", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllPhoneNumbersProjection() {
+        return ResponseEntity.ok(phoneService.getPhonesNumbersProjection());
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping(value = "/funds/statistics", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String,Double>> getFundsStatistics() {
         return ResponseEntity.ok(phoneQueries.getFundsStatistic());

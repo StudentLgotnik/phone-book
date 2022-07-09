@@ -1,6 +1,7 @@
 package com.example.phonebook.application.service;
 
 import com.example.phonebook.application.database.entity.Phone;
+import com.example.phonebook.application.database.projection.PhonePhoneNumberProjection;
 import com.example.phonebook.application.database.repository.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,6 +37,12 @@ public class PhoneService implements IService<Phone>{
     @Cacheable("phones")
     public Phone get(int id){
         return phoneRepository.findById(id).orElse(null);
+    }
+
+    public List<String> getPhonesNumbersProjection() {
+        return phoneRepository.findAllProjectedBy().stream()
+                .map(PhonePhoneNumberProjection::getFullPhoneNumber)
+                .collect(Collectors.toList());
     }
 
     @Override
